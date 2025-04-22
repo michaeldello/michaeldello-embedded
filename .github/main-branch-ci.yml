@@ -1,0 +1,47 @@
+name: Main Branch CI
+
+# Triggers
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Allow this Action's jobs access repository contents and packages in the GitHub
+# Container Registry (GHCR)
+permissions:
+  packages: read
+  contents: read
+      
+env:
+  BUILD_LOG_ARTIFACT: "build.log"
+
+jobs:
+
+  #-----------------------------------------------------------------------------
+  build-and-unit-test:
+    # Runner and Container Execution Context
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/michaeldello/stm32-dev:latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      # Run the build and unit testing in an existing container that supports 
+      # CMake and ... Unit Testing
+      # Ensure clean build
+      - name: Build and Unit Test Blinky
+        run: |
+          echo "TBD Build Applications ..." > ${{env.BUILD_LOG_ARTIFACT}}
+  
+      - name: Upload Artifacts (Binary & Logs)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            ${{env.BUILD_LOG_ARTIFACT}}

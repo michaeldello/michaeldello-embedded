@@ -1,0 +1,22 @@
+{
+  "name": "Embedded Dev (common)",
+  "build": {
+    "dockerfile": "../docker/common/Dockerfile",
+    "context": "..",
+    "platform": "linux/arm64"
+  },
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash"
+  },
+  "extensions": [
+    "ms-vscode.cpptools",
+    "ms-vscode.cmake-tools",
+    "ms-vscode.makefile-tools",
+    "marus25.cortex-debug"
+  ],
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
+  "workspaceFolder": "/workspace",
+  "remoteUser": "dev"
+}
