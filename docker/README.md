@@ -31,7 +31,7 @@ TBD - The version selected for aarch64 may also be viable for amd64, or a newer 
 
 From the repo's root dir, build and tag the image:
 ```
-docker build -t stm32-dev .
+docker build -t stm32-dev -f docker/common/Dockerfile .
 ```
 
 ### Running
@@ -48,27 +48,31 @@ This command:
 - Connects to it interactively in /workspace at which a local working directory is mounted
 - Starts the bash shell
 
-## CI Usage
+## CI (GitHub Actions) Usage
 
-### Authenticate to GitHub Container Repository (GHCR)
+### Building
 
 - Create a Personal Access Token (PAT) in GitHub with write/read/delete::packages permissions, then use that PAT to log into the GHCR.
 ```
 echo "<GITHUB_PAT>" | docker login ghcr.io -u <GITHUB_USERNAME> --password-stdin
 ```
-- If not already built, build and tag the container for upload to the GHCR (from Dockerfile's folder)
-  - Likely already built and tagged as stm32-dev for local use
+
+Note that buildx is used in this scenario in order to build the container to run in Docker locally (ARM64) if desired, and in GitHub Actions (AMD64). That is, the image is built for multiple platforms (buildx is required to do this).
+
+- Activate and confirm buildx multiplatform:
 ```
-docker build -t ghcr.io/<GITHUB_USERNAME>/stm32-dev:latest .
-```
-- If already built for local use, tag the container for upload to the GHCR
-```
-docker tag stm32-dev ghcr.io/<GITHUB_USERNAME>/stm32-dev:latest
-docker tag stm32-dev ghcr.io/<GITHUB_USERNAME>/stm32-dev:v1.0
+docker buildx create --name multiplatform --use
+docker buildx ls
 ```
 
-- Push the container to the GHCR
+- Build, tag, and push the image and push to GHCR
 ```
-docker push ghcr.io/<GITHUB_USERNAME>/stm32-dev:latest
-docker push ghcr.io/<GITHUB_USERNAME>/stm32-dev:v1.0
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t ghcr.io/<GITHUB_USERNAME>/stm32-dev:latest \
+  -t ghcr.io/<GITHUB_USERNAME>/stm32-dev:v1.0 \
+  -f docker/common/Dockerfile --push .
 ```
+
+### Running
+
+See .github/workflows/*.yml in this repo

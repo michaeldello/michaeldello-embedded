@@ -25,7 +25,7 @@ jobs:
     # Runner and Container Execution Context
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/michaeldello/stm32-dev:latest
+      image: ghcr.io/michaeldello/stm32-dev:v1.0
 
     steps:
       - name: Checkout Repo
