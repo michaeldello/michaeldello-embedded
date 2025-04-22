@@ -26,6 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/michaeldello/stm32-dev:v1.0
+      # Run the container as root
+      options: --user 0
 
     steps:
       - name: Checkout Repo
