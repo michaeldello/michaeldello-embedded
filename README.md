@@ -48,7 +48,7 @@ michaeldello-embedded/
 ├── projects/
 │   ├── blinky/
 │   │   ├── app/
-│   │   └── Makefile
+│   │   └── CMakeLists.txt
 │   ├── uart/
 │   └── spi/
 └── tools/
@@ -101,4 +101,37 @@ michaeldello-embedded/
 │   └── workflows/
 │       └── ci.yml
 ├── ...
+```
+
+# Maintenance and Extension
+
+## Adding a new Application
+
+Address these items to add a new application (or extend and existing one):
+
+1. Create a new, named application folder under projects/
+1. Add a README.md for preserving important notes
+1. Add an application header file in an app/ folder under the named application folder
+1. Iterate on the implementation module and unit tests
+    1. TDD can be used here to ensure a decoupled approach that can be iterated
+1. Create a main program for the new application's execution under the named application's folder that exercises the application's implementation
+1. Create/extend the target platform/board linker file(s)
+1. Create a CMakeLists.txt in the named application folder
+1. Get the application building in Docker
+
+## Building Applications
+
+### Building in Docker
+
+Run the Docker build container:
+
+```
+docker run --rm -it -v $(pwd):/workspace -w /workspace ghcr.io/michaeldello/stm32-dev:latest bash
+```
+
+Change to named application directory, where the CMakeLists.txt file resides, and use cmake commands to specify the source and build trees, and execute the build:
+```
+cd projects/<application>/
+cmake -S . -B build
+cmake --build build
 ```
