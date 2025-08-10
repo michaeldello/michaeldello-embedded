@@ -2,6 +2,8 @@
 //
 // This software is provided under the MIT License.
 // See LICENSE file for details.
+//------------------------------------------------------------------------------
+
 #ifndef INCLUDE_BLINKY_H_
 #define INCLUDE_BLINKY_H_
 

@@ -1,3 +1,3 @@
 # Blinky Project
 
-TBD
+Simple LED toggle

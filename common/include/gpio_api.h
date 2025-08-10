@@ -2,11 +2,12 @@
 //
 // This software is provided under the MIT License.
 // See LICENSE file for details.
+//------------------------------------------------------------------------------
 #ifndef INCLUDE_GPIO_API_H_
 #define INCLUDE_GPIO_API_H_
 //------------------------------------------------------------------------------
 //
-// This header provides a generic GPIO API that can be implemented for various
+// This header specifies a generic GPIO API that can be implemented for various
 // deployment contexts, e.g., execution on a target hardware device, or unit 
 // testing on a development host. In the latter case, the implementation will be
 // a stub.
@@ -32,7 +33,7 @@ typedef struct
 gpio_api_t;
 
 // Instantiate the GPIO API and defer assignment to its execution context
-extern gpio_api_t gpio_api;
+extern gpio_api_t gpio;
 
 //------------------------------------------------------------------------------
 // Function Declarations

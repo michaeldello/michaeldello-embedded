@@ -16,12 +16,27 @@ These projects are initially limited to blinky, USART/UART, and SPI examples.
 Projects span multiple contexts, not only the application tech (LED, UART, SPI, etc...), but there is separate support for bare metal, HAL/LL, FreeRTOS, and Embedded Linux. These environments may be deployed to newer STM32 technology over time, so a reusable scalable architecture is desirable. Therefore, application code should be decoupled from platform level details, with MCU family details encapsulated into their own subfolders. Build systems per project can then be parameterized. Application code can then be implemented using common interfaces to underlying platform details, with the build system building the right components based on the target requested.
 
 ## Example Directory Structure
+
+The following directory structure supports an architecture that promotes hardware platform decoupling, unit testing, and a coherent CMake strategy. Platform and target board technology can be linked in based on the tope level build target without needing messy if/else decision trees.
+
 ```
 michaeldello-embedded/
 ├── config/
 │   ├─── blinky.baremetal.stm32h5.mk
 │   └─── uart.hal.stm32h7.mk
 ├── common/
+│   ├── drivers/
+│   │   └── usart/
+│   │       ├── usart_generic.c
+│   │       ├── usart_stm32h5.c
+│   │       ├── usart_stm32h7.c
+│   │       └── ...
+│   ├── include/
+│   │   ├── gpio_api.h
+│   │   └── ...
+│   ├── linker/
+│   │   ├── stm32h5/
+│   │   └── stm32h7/
 │   ├── platform/
 │   │   ├── baremetal/
 │   │   │   ├── stm32h5/
@@ -36,24 +51,32 @@ michaeldello-embedded/
 │   ├── startup/
 │   │   ├── stm32h5/
 │   │   └── stm32h7/
-│   ├── linker/
-│   │   ├── stm32h5/
-│   │   └── stm32h7/
-│   └── drivers/
-│       ├── usart/
-│           ├── usart_generic.c
-│           ├── usart_stm32h5.c
-│           └── usart_stm32h7.c
+│   └── unit_tests/
+│       └── stubs/
+│           └── gpio_stub.c
 ├── docs/
 ├── projects/
 │   ├── blinky/
 │   │   ├── app/
-│   │   └── CMakeLists.txt
+│   │   ├── CMakeLists.txt
+│   │   ├── main.c
+│   │   └── unit_tests/
+│   │       ├── test_blinky.cpp
+│   │       └── CMakeLists.txt
 │   ├── uart/
 │   └── spi/
 └── tools/
-    └── flash.sh
+│   └── flash.sh
+├── unit_tests/
+│   └── CMakeLists.txt
 ```
+
+## CMake Strategy
+
+1. Each project contains its own application and unit tests
+1. The top level CMakeLists.txt discovers and builds them separately
+1. Each project main links in the target platform and board implementations
+1. Each project unit test main links in hardware and platform stubs
 
 ## Example Build Config
 
