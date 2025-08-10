@@ -4,7 +4,7 @@ The Unit Test Framework used is CMock for its simplicity and native C implementa
 
 ## Commands
 
-The following commands run from the repository root directory build and run all unit tests:
+The following commands run from the repository root directory in a running Docker container based on this repository's Dockerfile will build and run all unit tests:
 
 ```
 mkdir build && cd build

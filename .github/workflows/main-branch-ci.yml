@@ -21,29 +21,51 @@ env:
 jobs:
 
   #-----------------------------------------------------------------------------
-  build-and-unit-test:
+  run-unit-tests:
     # Runner and Container Execution Context
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     container:
-      image: ghcr.io/michaeldello/stm32-dev:v1.0
+      image: ghcr.io/michaeldello/stm32-dev:v1.2
       # Run the container as root
       options: --user 0
+    
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [ blinky ]
 
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      # Run the build and unit testing in an existing container that supports 
-      # CMake and ... Unit Testing
-      # Ensure clean build
-      - name: Build and Unit Test Blinky
+      - name: Configure CMake
         run: |
-          echo "TBD Build Applications ..." > ${{env.BUILD_LOG_ARTIFACT}}
-  
-      - name: Upload Artifacts (Binary & Logs)
+          rm -rf build
+          cmake -S . -B build -DUNIT_TESTS=ON -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build All Tests
+        run: cmake --build build --parallel
+
+      - name: Run Unit Tests for ${{ matrix.project }}
+        run: |
+          ctest --test-dir build \
+                --output-on-failure
+                -L "${{ matrix.project }}"
+      
+      - name: Generate JUnit for ${{ matrix.project }}
+        if: always()
+        run: |
+          ctest --test-dir build \
+                --output-junit "tests-${{ matrix.project }}.xml" \
+                -L "${{ matrix.project }}" || true
+
+      - name: Upload Artifact for (${{ matrix.project }})
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
-          path: |
-            ${{env.BUILD_LOG_ARTIFACT}}
+          name: unit-tests-${{ matrix.project }}
+          path: build/tests-${{ matrix.project }}.xml

@@ -25,3 +25,4 @@ target_link_libraries(test_blinky PRIVATE
 )
 
 add_test(NAME BlinkyTest COMMAND test_blinky)
+set_tests_properties(BlinkyTest PROPERTIES LABELS "blinky")
