@@ -50,7 +50,7 @@ This command:
 
 ## CI (GitHub Actions) Usage
 
-### Building
+### Building ARM64 - For local
 
 - Create a Personal Access Token (PAT) in GitHub with write/read/delete::packages permissions, then use that PAT to log into the GHCR.
 ```
@@ -67,10 +67,28 @@ docker buildx ls
 
 - Build, tag, and push the image and push to GHCR
 ```
-docker buildx build --platform linux/amd64,linux/arm64 \
-  -t ghcr.io/<GITHUB_USERNAME>/stm32-dev:latest \
-  -t ghcr.io/<GITHUB_USERNAME>/stm32-dev:v1.0 \
-  -f docker/common/Dockerfile --push .
+docker buildx build \                                                                                   
+  --platform linux/arm64 \ 
+  -f docker/common/Dockerfile \
+  -t ghcr.io/michaeldello/stm32-dev:v1.3-arm64 \
+  --push \
+  .
+```
+
+### Building AMD4 - For CI
+
+Use GitHub actions Publish CI workflow.
+
+See .github/workflows/publish-amd64.yml
+
+## Merge ARM64 and AMD64
+
+```
+docker buildx imagetools create \
+  -t ghcr.io/michaeldello/stm32-dev:v1.3 \
+  -t ghcr.io/michaeldello/stm32-dev:latest \
+  ghcr.io/michaeldello/stm32-dev:v1.3-amd64 \
+  ghcr.io/michaeldello/stm32-dev:v1.3-arm64
 ```
 
 ### Running
