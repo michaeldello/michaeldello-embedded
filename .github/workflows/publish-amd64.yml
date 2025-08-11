@@ -1,0 +1,44 @@
+name: Publish amd64 dev image
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Version tag (e.g., v1.3)'
+        required: true
+  push:
+    branches: [ main ]
+    paths:
+      - 'docker/**'
+      - '.devcontainer/**'
+
+jobs:
+  build-amd64:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compute tag
+        id: t
+        run: |
+          if [ -n "${{ github.event.inputs.tag }}" ]; then
+            echo "TAG=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "TAG=v0-ci-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          fi
+      - name: Build & push (amd64)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/common/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ghcr.io/michaeldello/stm32-dev:${{ steps.t.outputs.TAG }}-amd64
