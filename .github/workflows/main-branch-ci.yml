@@ -14,9 +14,6 @@ on:
 permissions:
   packages: read
   contents: read
-      
-env:
-  BUILD_LOG_ARTIFACT: "build.log"
 
 jobs:
 
