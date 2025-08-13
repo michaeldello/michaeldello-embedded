@@ -32,29 +32,23 @@ gpio_api_t gpio;
 //------------------------------------------------------------------------------
 // Function Definitions
 //------------------------------------------------------------------------------
-void gpio_write(uint32_t pin, uint8_t value)
-{
-    if (value)
-    {
+void gpio_write(uint32_t pin, uint8_t value) {
+    if (value) {
         // Set pin value
         GPIOB_ODR |= (1U << pin);
-    }
-    else
-    {
+    } else {
         // Clear pin value
         GPIOB_ODR &= ~(1U << pin);
     }
 }
 
 //------------------------------------------------------------------------------
-void gpio_toggle(uint32_t pin)
-{
+void gpio_toggle(uint32_t pin) {
     GPIOB_ODR ^= (1U << pin);
 }
 
 //------------------------------------------------------------------------------
-void gpio_init(void)
-{
+void gpio_init(void) {
     // Enable GPIOB Clock (pin 1 in RCC) 
     RCC_AHB4ENR |= (1 << 1);
 

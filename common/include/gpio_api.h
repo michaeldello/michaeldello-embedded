@@ -25,8 +25,7 @@ typedef void (*gpio_write_fn)(uint32_t pin, uint8_t value);
 typedef void (*gpio_toggle_fn)(uint32_t pin);
 
 // Organize the GPIO API into an object type
-typedef struct
-{
+typedef struct {
     gpio_write_fn  write;
     gpio_toggle_fn toggle;
 }

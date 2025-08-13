@@ -26,27 +26,23 @@ static uint8_t pin_states[32] = {0};
 //------------------------------------------------------------------------------
 // Function Definitions
 //------------------------------------------------------------------------------
-void gpio_write(uint32_t pin, uint8_t value)
-{
+void gpio_write(uint32_t pin, uint8_t value) {
     pin_states[pin] = value;
 }
 
 //------------------------------------------------------------------------------
-void gpio_toggle(uint32_t pin)
-{
+void gpio_toggle(uint32_t pin) {
     pin_states[pin] ^= 1U;
 }
 
 //------------------------------------------------------------------------------
-void gpio_init(void)
-{
+void gpio_init(void) {
     // Install API implementation
     gpio.write  = gpio_write;
     gpio.toggle = gpio_toggle;
 }
 
 //------------------------------------------------------------------------------
-uint8_t gpio_get_pin(uint32_t pin)
-{
+uint8_t gpio_get_pin(uint32_t pin) {
     return pin_states[pin];
 }

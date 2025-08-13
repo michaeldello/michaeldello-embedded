@@ -4,7 +4,7 @@ project(blinky_unit_tests C)
 
 # REPO_ROOT may be set by parent, but if this 
 # is used standalone, it may be missing
-if()
+if(NOT DEFINED REPO_ROOT)
   get_filename_component(REPO_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
 endif()
 

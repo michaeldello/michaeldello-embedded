@@ -152,9 +152,40 @@ Run the Docker build container:
 docker run --rm -it -v $(pwd):/workspace -w /workspace ghcr.io/michaeldello/stm32-dev:latest bash
 ```
 
-Change to named application directory, where the CMakeLists.txt file resides, and use cmake commands to specify the source and build trees, and execute the build:
+This can also be opened in the context of VSCode.
+
+Build the Release:
+
 ```
-cd projects/<application>/
-cmake -S . -B build
-cmake --build build
+rm -rf build-fw
+cmake -S . -B build-fw \
+  -DBUILD_FIRMWARE=ON \
+  -DUNIT_TESTS=OFF \
+  -DCMAKE_TOOLCHAIN_FILE=toolchains/arm-gcc.cmake \
+  -DCMAKE_BUILD_TYPE=Release
+cmake --build build-fw --parallel
+```
+
+## Loading the Application
+
+Using ST-Link:
+```
+openocd -f interface/stlink.cfg -f target/stm32h5x.cfg \
+  -c "program build-fw/blinky.elf verify reset exit"
+```
+
+Using J-Link:
+```
+openocd -f interface/jlink.cfg -f target/stm32h5x.cfg \
+  -c "program build-fw/blinky.elf verify reset exit"
+```
+
+Using SEGGER GDB:
+```
+JLinkGDBServer -device STM32H563ZI -if SWD -speed 4000
+arm-none-eabi-gdb build-fw/blinky.elf
+(gdb) target remote :2331
+(gdb) monitor reset halt
+(gdb) load
+(gdb) continue
 ```

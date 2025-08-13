@@ -10,7 +10,6 @@ find_package(cmocka REQUIRED)
 
 # Resolve repo root
 get_filename_component(REPO_ROOT "${CMAKE_CURRENT_LIST_DIR}/.." ABSOLUTE)
-# message(STATUS "Unit test aggregator: REPO_ROOT=${REPO_ROOT}")
 
 add_subdirectory(
   "${REPO_ROOT}/projects/blinky/unit_tests"
