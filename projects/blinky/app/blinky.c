@@ -13,12 +13,10 @@
 
 #define LED_PIN 0
 
-void blinky_init(void)
-{
+void blinky_init(void) {
     gpio_init();
 }
 
-void blinky_toggle(void)
-{
+void blinky_toggle(void) {
     gpio.toggle(LED_PIN);
 }

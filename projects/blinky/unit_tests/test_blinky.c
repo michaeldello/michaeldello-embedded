@@ -11,16 +11,28 @@
 #include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
+
+//--------------------
+// Unit Test Framework
+//--------------------
 #include <cmocka.h>
+//--------------------
 
 #include "blinky.h"
 #include "gpio_api.h"
 
-uint8_t gpio_get_pin(uint32_t pin);  // from gpio_stub
+//------------------------------------------------------------------------------
+// Function Declarations
+//------------------------------------------------------------------------------
+
+// From gpio_stub
+uint8_t gpio_get_pin(uint32_t pin);
 
 //------------------------------------------------------------------------------
-// Test Setup
+// Function Definitions
 //------------------------------------------------------------------------------
+
+// Reusable Test Setup
 static int setup(void **state) {
     (void)state;
     gpio_init();
