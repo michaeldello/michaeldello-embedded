@@ -41,7 +41,7 @@ jobs:
       - name: Configure CMake
         run: |
           rm -rf build
-          cmake -S . -B build -DUNIT_TESTS=ON -BBUILD_FIRMWARE=OFF -DCMAKE_BUILD_TYPE=Debug
+          cmake -S . -B build -DUNIT_TESTS=ON -DBUILD_FIRMWARE=OFF -DCMAKE_BUILD_TYPE=Debug
 
       - name: Build All Tests
         run: cmake --build build --parallel
