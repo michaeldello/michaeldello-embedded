@@ -10,7 +10,7 @@
 *.log
 
 # Ignore build artifacts (other than that addressed elsewhere)
-**/build/
+**/build*/
 *.bin
 *.map
 
