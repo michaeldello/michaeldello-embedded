@@ -5,7 +5,7 @@
     .section .isr_vector,"a",%progbits
     .type g_pfnVectors, %object
 g_pfnVectors:
-    .word estack            /* Initial stack ptr */
+    .word _estack           /* Initial stack ptr */
     .word Reset_Handler
     .word Default_Handler   /* NMI */
     .word Default_Handler   /* HardFault */

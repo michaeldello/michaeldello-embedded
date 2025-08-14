@@ -18,7 +18,7 @@ add_executable(blinky.elf
     ${CMAKE_SOURCE_DIR}/projects/blinky/main.c
     ${CMAKE_SOURCE_DIR}/projects/blinky/app/blinky.c
     ${CMAKE_SOURCE_DIR}/common/platform/baremetal/stm32h5/gpio.c
-    ${CMAKE_SOURCE_DIR}/common/platform/baremetal/stm32h5/startup_stm32.s
+    ${CMAKE_SOURCE_DIR}/common/platform/baremetal/stm32h5/startup_stm32h5.s
 )
 
 # Set include paths
@@ -28,6 +28,11 @@ target_include_directories(blinky.elf PRIVATE
 )
 
 target_link_options(blinky.elf PRIVATE "-T${LINKER_SCRIPT}")
+
+target_link_options(blinky.elf PRIVATE
+    "-specs=nano.specs"
+    "-specs=nosys.specs"
+)
 
 add_custom_command(TARGET blinky.elf POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:blinky.elf> ${CMAKE_BINARY_DIR}/blinky.hex

@@ -41,7 +41,7 @@ jobs:
       - name: Configure CMake
         run: |
           rm -rf build
-          cmake -S . -B build -DUNIT_TESTS=ON -DCMAKE_BUILD_TYPE=Debug
+          cmake -S . -B build -DUNIT_TESTS=ON -BBUILD_FIRMWARE=OFF -DCMAKE_BUILD_TYPE=Debug
 
       - name: Build All Tests
         run: cmake --build build --parallel
@@ -51,6 +51,8 @@ jobs:
           ctest --test-dir build \
                 --output-on-failure \
                 -L "${{ matrix.project }}"
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
       
       - name: Generate JUnit for ${{ matrix.project }}
         if: always()
@@ -65,3 +67,56 @@ jobs:
         with:
           name: unit-tests-${{ matrix.project }}
           path: build/tests-${{ matrix.project }}.xml
+
+  #-----------------------------------------------------------------------------
+  build-firmware:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [ blinky ]
+    container:
+      image: ghcr.io/michaeldello/stm32-dev:v1.3
+      # Run the container as root
+      options: --user 0
+    env:
+      TOOLCHAIN_FILE: toolchains/arm-gcc.cmake
+      BUILD_DIR: build-fw/${{ matrix.project }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Check Toolchain
+        run: |
+          arm-none-eabi-gcc --version
+          test -f "$TOOLCHAIN_FILE" || (echo "Missing $TOOLCHAIN_FILE" && exit 1)
+      
+      - name: Configure (${{ matrix.project }})
+        run: |
+          rm -rf "$BUILD_DIR"
+          cmake -S . -B "$BUILD_DIR" \
+            -DBUILD_FIRMWARE=ON \
+            -DUNIT_TESTS=OFF \
+            -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build (${{ matrix.project }})
+        run: cmake --build "$BUILD_DIR" --parallel
+
+      - name: Collect (${{ matrix.project }}) Artifacts
+        run: |
+          mkdir -p artifacts/${{ matrix.project }}
+          cp -v "$BUILD_DIR"/*.elf artifacts/${{ matrix.project }} 2>/dev/null || true
+          cp -v "$BUILD_DIR"/*.hex artifacts/${{ matrix.project }} 2>/dev/null || true
+          cp -v "$BUILD_DIR"/*.bin artifacts/${{ matrix.project }} 2>/dev/null || true
+          cp -v "$BUILD_DIR"/*.map artifacts/${{ matrix.project }} 2>/dev/null || true
+
+      - name: Upload Firmware Build Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.project }}
+          path: artifacts/${{ matrix.project }}
