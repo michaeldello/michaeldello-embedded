@@ -109,10 +109,10 @@ jobs:
       - name: Collect (${{ matrix.project }}) Artifacts
         run: |
           mkdir -p artifacts/${{ matrix.project }}
-          cp -v "$BUILD_DIR"/*.elf artifacts/${{ matrix.project }} 2>/dev/null || true
           cp -v "$BUILD_DIR"/*.hex artifacts/${{ matrix.project }} 2>/dev/null || true
           cp -v "$BUILD_DIR"/*.bin artifacts/${{ matrix.project }} 2>/dev/null || true
-          cp -v "$BUILD_DIR"/*.map artifacts/${{ matrix.project }} 2>/dev/null || true
+          cp -v "$BUILD_DIR"/projects/${{ matrix.project }}/*.elf artifacts/${{ matrix.project }} 2>/dev/null || true
+          cp -v "$BUILD_DIR"/projects/${{ matrix.project }}/*.map artifacts/${{ matrix.project }} 2>/dev/null || true
 
       - name: Upload Firmware Build Artifacts
         if: always()
