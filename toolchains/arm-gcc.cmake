@@ -32,5 +32,5 @@ set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} -O2")
 set(CMAKE_ASM_FLAGS "${MCU_FLAGS} ${CMAKE_ASM_FLAGS}")
 
 # Linker flags
-set(LD_FLAGS "${MCU_FLAGS} -Wl,--gc-sections -Wl,-Map=${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.map")
+set(LD_FLAGS "${MCU_FLAGS} -Wl,--gc-sections")
 set(CMAKE_EXE_LINKER_FLAGS "${LD_FLAGS} ${CMAKE_EXE_LINKER_FLAGS}")
