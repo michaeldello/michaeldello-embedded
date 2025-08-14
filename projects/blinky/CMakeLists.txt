@@ -27,7 +27,7 @@ target_include_directories(blinky.elf PRIVATE
     ${CMAKE_SOURCE_DIR}/common/include
 )
 
-target_link_options(blinky.elf PRIVATE "-Wl,-Map,$<TARGET_FILE_DIR:blinky.elf>/$<TARGET_FILE_BASE_NAME:blinky.elf>.map")
+target_link_options(blinky.elf PRIVATE "-Wl,-Map,$<TARGET_FILE_DIR:blinky.elf>/blinky.map")
 target_link_options(blinky.elf PRIVATE "-T${LINKER_SCRIPT}")
 target_link_options(blinky.elf PRIVATE
     "-specs=nano.specs"
