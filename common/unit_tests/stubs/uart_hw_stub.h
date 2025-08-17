@@ -3,40 +3,38 @@
 // This software is provided under the MIT License.
 // See LICENSE file for details.
 //------------------------------------------------------------------------------
-#ifndef INCLUDE_GPIO_API_H_
-#define INCLUDE_GPIO_API_H_
+#ifndef INCLUDE_UART_HW_STUB_H_
+#define INCLUDE_UART_HW_STUB_H_
 //------------------------------------------------------------------------------
 //
-// This header specifies a generic GPIO API that can be implemented for various
-// deployment contexts, e.g., execution on a target hardware device, or unit 
-// testing on a development host. In the latter case, the implementation will be
-// a stub.
+// UART stub specification for unit testing application code
 //
 //------------------------------------------------------------------------------
 
 #include <stdint.h>
+#include <stdbool.h>
+#include "uart_api.h"
 
 //------------------------------------------------------------------------------
-// API Object Definition
+// Types
 //------------------------------------------------------------------------------
 
-// Define functor prototypes for the API
-typedef void (*gpio_write_fn)(uint32_t pin, uint8_t value);
-typedef void (*gpio_toggle_fn)(uint32_t pin);
-
-// Organize the GPIO API into an object type
 typedef struct {
-    gpio_write_fn  write;
-    gpio_toggle_fn toggle;
-}
-gpio_api_t;
-
-// Instantiate the GPIO API and defer assignment to its execution context
-extern gpio_api_t gpio;
+    // Simulate Tx
+    uint8_t *ptx_buf;
+    size_t tx_capacity;
+    size_t tx_len;
+    // Simulate Rx
+    const uint8_t *prx_src;
+    size_t rx_len;
+    size_t rx_idx;
+    // Simulate flow control (how many bytes HW is ready to send)
+    int tx_bytes;
+} uart_stub_ctx_t;
 
 //------------------------------------------------------------------------------
 // Function Declarations
 //------------------------------------------------------------------------------
-void gpio_init(void);
+void uart_hw_stub_create(uart_hw_vtable_t *pv, uart_stub_ctx_t *pctx);
 
-#endif // INCLUDE_GPIO_API_H_
+// INCLUDE_UART_HW_STUB_H_
