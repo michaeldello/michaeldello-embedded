@@ -4,7 +4,7 @@
 // See LICENSE file for details.
 //------------------------------------------------------------------------------
 //
-// GPIO API implementation for unit testing application code.
+// GPIO API implementation for unit testing application code
 //
 //------------------------------------------------------------------------------
 

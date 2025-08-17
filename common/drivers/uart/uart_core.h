@@ -3,23 +3,15 @@
 // This software is provided under the MIT License.
 // See LICENSE file for details.
 //------------------------------------------------------------------------------
-
-#include "blinky.h"
-#include "gpio_api.h"
-
+#ifndef INCLUDE_UART_CORE_H_
+#define INCLUDE_UART_CORE_H_
 //------------------------------------------------------------------------------
-// Constants
+//
+// This header specifies a portable UART core API.
+//
 //------------------------------------------------------------------------------
 
-#define LED_PIN 0
+#include "uart_api.h"
+#include "ringbuf.h"
 
-//------------------------------------------------------------------------------
-// Function Definitions
-//------------------------------------------------------------------------------
-void blinky_init(void) {
-    gpio_init();
-}
-
-void blinky_toggle(void) {
-    gpio.toggle(LED_PIN);
-}
+#endif // INCLUDE_UART_CORE_H_

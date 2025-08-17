@@ -11,8 +11,8 @@
 
 # Ignore build artifacts (other than that addressed elsewhere)
 **/build*/
-*.bin
-*.map
+**/*.bin
+**/*.map
 
 # VS Code
 .vscode/
