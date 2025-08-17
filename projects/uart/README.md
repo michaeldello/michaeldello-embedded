@@ -15,3 +15,12 @@ Portable UART code is found in common/drivers/uart/
 ## Hardware Driver
 
 The hardware drivers for different platforms are found in platform/baremetal/
+
+## Build and Unit Test
+
+To build and run unit tests in the Docker container, use the following commands from the repository root dir:
+```
+rm -rf build && cmake -S . -B build -DUNIT_TESTS=ON -DBUILD_FIRMWARE=OFF -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure -L uart
+```
