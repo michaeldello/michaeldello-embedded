@@ -22,8 +22,9 @@
 // Types
 //------------------------------------------------------------------------------
 
+// Hardware API
+// Functions to be called by portable core
 typedef struct {
-    // HW-specific functions called by portable core
     bool (*hw_init)(uint32_t baud);
     bool (*hw_tx_ready)(void);
     bool (*hw_tx_write)(uint8_t byte);
@@ -31,13 +32,8 @@ typedef struct {
     bool (*hw_rx_read)(void);
 } uart_hw_vtable_t;
 
-// Opaque instance handle
-// Defer definition to implementation file
-typedef struct uart_t {
-    uart_hw_vtable_t hw;
-    struct ringbuf_t *prx_fifo;
-    struct ringbuf_t *ptx_fifo;
-} uart_t;
+// One-per-instance opaque handle
+typedef struct uart_t uart_t;
 
 //------------------------------------------------------------------------------
 // Function Declarations
@@ -71,5 +67,15 @@ size_t uart_tx_queued(const uart_t *pu);
 //------------------------------------------------------------------------------
 // Echo Helper
 void uart_echo_pump(const uart_t *pu);
+
+//------------------------------------------------------------------------------
+// Overflow Diag
+uint32_t uart_rx_overflow_count(const uart_t *pu);
+uint32_t uart_rx_overflow_clear(const uart_t *pu);
+
+//------------------------------------------------------------------------------
+// Override Drain Chunk Size
+void uart_set_echo_chunk_size(uart_t *pu, size_t chunk_size_bytes);
+size_t uart_get_echo_chunk_size(const uart_t *pu);
 
 #endif // INCLUDE_UART_API_H_
