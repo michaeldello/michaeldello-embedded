@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 #include "uart_core.h"
-#include <string>
+#include <string.h>
 
 //------------------------------------------------------------------------------
 // Types
@@ -25,6 +25,8 @@ struct uart_t {
     uint32_t  rx_overflow_count;
     size_t    echo_chunk_size_bytes;
 };
+// Define uart_t size helper function
+size_t uart_context_size(void) { return sizeof(struct uart_t); }
 
 //------------------------------------------------------------------------------
 // Function Definitions
@@ -32,14 +34,14 @@ struct uart_t {
 bool uart_init(
         uart_t                 *pu, 
         const uart_hw_vtable_t *phw,
-        unit32_t               baud, 
+        uint32_t               baud, 
         void                   *prx_buf, 
         size_t                 rx_size, 
         void                   *ptx_buf, 
         size_t                 tx_size) {
     // Initial sanity checks
     if (!pu || !phw || !phw->hw_init ||
-            !*prx_buf ||  !*ptx_buf || !rx_size || ! tx_size) {
+            !prx_buf ||  !ptx_buf || !rx_size || ! tx_size) {
         return false;
     }
     // Install hardware API
@@ -53,6 +55,7 @@ bool uart_init(
 
 //------------------------------------------------------------------------------
 void uart_isr_rx_byte(uart_t *pu, uint8_t byte) {
+    // To be called from ISR (or test shim)
     // Push byte onto Rx FIFO, dropping any overflow
     // Maintain diagnostics for data loss
     // Notes:
@@ -89,7 +92,13 @@ size_t uart_write(uart_t *pu, const uint8_t *pdata, size_t len) {
 }
 
 //------------------------------------------------------------------------------
-size_t uart_read(uart_t *pu, const uint8_t *pout, size_t maxlen) {
+size_t uart_rx_available(const uart_t *pu) {
+    // For polling the UART: what's available in the Rx FIFO?
+    return ringbuf_available(&pu->rx_fifo);
+}
+
+//------------------------------------------------------------------------------
+size_t uart_read(uart_t *pu, uint8_t *pout, size_t maxlen) {
     size_t n = 0;
     uint8_t byte;
     // Read as much as possible from the Rx FIFO into the given out buffer
@@ -97,12 +106,6 @@ size_t uart_read(uart_t *pu, const uint8_t *pout, size_t maxlen) {
         pout[n++] = byte;
     }
     return n;
-}
-
-//------------------------------------------------------------------------------
-size_t uart_rx_available(const uart_t *pu) {
-    // What's available in the Rx FIFO?
-    return ringbuf_available(&pu->rx_fifo);
 }
 
 //------------------------------------------------------------------------------
@@ -136,7 +139,7 @@ uint32_t uart_rx_overflow_count(const uart_t *pu) {
 }
 
 //------------------------------------------------------------------------------
-uint32_t uart_rx_overflow_clear(const uart_t *pu) {
+uint32_t uart_rx_overflow_clear(uart_t *pu) {
     pu->rx_overflow_count = 0;
 }
 

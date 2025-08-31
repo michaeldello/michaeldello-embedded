@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [ blinky ]
+        project: [ blinky, uart ]
 
     steps:
       - name: Checkout Repo
@@ -43,7 +43,7 @@ jobs:
           rm -rf build
           cmake -S . -B build -DUNIT_TESTS=ON -DBUILD_FIRMWARE=OFF -DCMAKE_BUILD_TYPE=Debug
 
-      - name: Build All Tests
+      - name: Build All Unit Tests
         run: cmake --build build --parallel
 
       - name: Run Unit Tests for ${{ matrix.project }}

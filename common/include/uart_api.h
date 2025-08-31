@@ -27,13 +27,17 @@
 typedef struct {
     bool (*hw_init)(uint32_t baud);
     bool (*hw_tx_ready)(void);
-    bool (*hw_tx_write)(uint8_t byte);
+    void (*hw_tx_write)(uint8_t byte);
+    // Polling Rx design:
+    // Read one byte if there a byte ready
     bool (*hw_rx_available)(void);
-    bool (*hw_rx_read)(void);
+    uint8_t (*hw_rx_read)(void);
 } uart_hw_vtable_t;
 
 // One-per-instance opaque handle
 typedef struct uart_t uart_t;
+// Helper function to query uart_t size for storage allocation
+size_t uart_context_size(void);
 
 //------------------------------------------------------------------------------
 // Function Declarations
@@ -42,14 +46,14 @@ typedef struct uart_t uart_t;
 bool uart_init(
     uart_t *pu, 
     const uart_hw_vtable_t *phw, 
-    unit32_t baud, 
+    uint32_t baud, 
     void *prx_buf, 
     size_t rx_size, 
     void *ptx_buf, 
     size_t tx_size);
 
 //------------------------------------------------------------------------------
-// Push inbound byte from ISR
+// ISR Rx Variant: Push inbound byte into FIFO from ISR
 void uart_isr_rx_byte(uart_t *pu, uint8_t byte);
 
 //------------------------------------------------------------------------------
@@ -60,18 +64,19 @@ void uart_service_tx(uart_t *pu);
 //------------------------------------------------------------------------------
 // Context: Application APIs
 size_t uart_write(uart_t *pu, const uint8_t *pdata, size_t len);
-size_t uart_read(uart_t *pu, const uint8_t *pout, size_t maxlen);
-size_t uart_rx_available(const uart_t *pu);
 size_t uart_tx_queued(const uart_t *pu);
+// Polling Rx Variant: Check if Rx available, then read
+size_t uart_rx_available(const uart_t *pu);
+size_t uart_read(uart_t *pu, uint8_t *pout, size_t maxlen);
 
 //------------------------------------------------------------------------------
 // Echo Helper
-void uart_echo_pump(const uart_t *pu);
+void uart_echo_pump(uart_t *pu);
 
 //------------------------------------------------------------------------------
 // Overflow Diag
 uint32_t uart_rx_overflow_count(const uart_t *pu);
-uint32_t uart_rx_overflow_clear(const uart_t *pu);
+uint32_t uart_rx_overflow_clear(uart_t *pu);
 
 //------------------------------------------------------------------------------
 // Override Drain Chunk Size
