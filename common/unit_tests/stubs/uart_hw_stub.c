@@ -35,7 +35,7 @@ static bool s_tx_ready(void) {
 static void s_tx_write(uint8_t byte) {
     // Write the byte if there is room
     if (pGlobalctx->tx_len < pGlobalctx->tx_capacity) {
-        pGlobalctx->tx_buf[pGlobalctx->tx_len++] = byte;
+        pGlobalctx->ptx_buf[pGlobalctx->tx_len++] = byte;
     }
     // Apply flow control
     if (pGlobalctx->tx_bytes > 0) { 
@@ -53,7 +53,7 @@ static bool s_rx_available(void) {
 static uint8_t s_rx_read(void) {
     // Return the next Rx byte, if any, otherwise return 0
     return (pGlobalctx->rx_idx < pGlobalctx->rx_len) ? 
-        (pGlobalctx->rx_src[pGlobalctx->rx_idx++]) : 0;
+        (pGlobalctx->prx_src[pGlobalctx->rx_idx++]) : 0;
 }
 
 //------------------------------------------------------------------------------

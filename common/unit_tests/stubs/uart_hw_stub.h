@@ -38,4 +38,4 @@ typedef struct {
 //------------------------------------------------------------------------------
 void uart_hw_stub_create(uart_hw_vtable_t *pv, uart_stub_ctx_t *pctx);
 
-// INCLUDE_UART_HW_STUB_H_
+#endif // INCLUDE_UART_HW_STUB_H_

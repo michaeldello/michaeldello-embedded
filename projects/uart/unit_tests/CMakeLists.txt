@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(uart_echo_unit_tests C)
+project(uart_unit_tests C)
 
 # REPO_ROOT may be set by parent, but if this 
 # is used standalone, it may be missing
@@ -19,8 +19,9 @@ target_include_directories(test_ringbuf PRIVATE
 target_include_directories(test_ringbuf PRIVATE
     ${CMOCKA_INCLUDE_DIRS}
 )
+target_link_libraries(test_ringbuf PRIVATE ${CMOCKA_LIBRARIES})
 add_test(NAME UartRingBufTest COMMAND test_ringbuf)
-set_tests_properties(UartRingBufTest PROPERTIES LABELS "uart_echo")
+set_tests_properties(UartRingBufTest PROPERTIES LABELS "uart")
 
 # UART Core Tests
 add_executable(test_uart_core
@@ -33,9 +34,11 @@ target_include_directories(test_uart_core PRIVATE
     ${REPO_ROOT}/common/include
     ${REPO_ROOT}/common/drivers/uart
     ${REPO_ROOT}/common/unit_tests/stubs
+    ${REPO_ROOT}/projects/uart/app
 )
 target_include_directories(test_uart_core PRIVATE
     ${CMOCKA_INCLUDE_DIRS}
 )
+target_link_libraries(test_uart_core PRIVATE ${CMOCKA_LIBRARIES})
 add_test(NAME UartCoreTest COMMAND test_uart_core)
-set_tests_properties(UartCoreTest PROPERTIES LABELS "uart_echo")
+set_tests_properties(UartCoreTest PROPERTIES LABELS "uart")

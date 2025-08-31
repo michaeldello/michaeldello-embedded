@@ -11,6 +11,9 @@
 //
 //------------------------------------------------------------------------------
 
+#include <stdbool.h>
+#include <stdint.h>
+
 //------------------------------------------------------------------------------
 // Types
 //------------------------------------------------------------------------------
@@ -45,7 +48,7 @@ static inline size_t ringbuf_space(const ringbuf_t *pr) {
 }
 
 //------------------------------------------------------------------------------
-static inline bool ringbuf_push(const ringbuf_t *pr, uint8_t byte) {
+static inline bool ringbuf_push(ringbuf_t *pr, uint8_t byte) {
     if (pr->count == pr->capacity) return false;
     pr->pbuf[pr->head] = byte;
     pr->head = (pr->head + 1) % pr->capacity;
@@ -54,9 +57,10 @@ static inline bool ringbuf_push(const ringbuf_t *pr, uint8_t byte) {
 }
 
 //------------------------------------------------------------------------------
-static inline bool ringbuf_pop(const ringbuf_t *pr, uint8_t *pout) {
+static inline bool ringbuf_pop(ringbuf_t *pr, uint8_t *pout) {
     if (pr->count == 0) return false;
-    pout = pr->pbuf[pr->tail];
+    // Deep copy byte value
+    *pout = pr->pbuf[pr->tail];
     pr->tail = (pr->tail + 1) % pr->capacity;
     pr->count--;
     return true;

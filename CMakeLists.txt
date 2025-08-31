@@ -16,6 +16,6 @@ endif()
 
 # Unit tests (all)
 if(UNIT_TESTS)
-  enable_testing()
+  include(CTest)
   add_subdirectory(unit_tests)
 endif()
