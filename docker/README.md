@@ -59,7 +59,7 @@ echo "<GITHUB_PAT>" | docker login ghcr.io -u <GITHUB_USERNAME> --password-stdin
 
 Note that buildx is used in this scenario in order to build the container to run in Docker locally (ARM64) if desired, and in GitHub Actions (AMD64). That is, the image is built for multiple platforms (buildx is required to do this).
 
-- Activate and confirm buildx multiplatform:
+- Activate and confirm buildx multiplatform (skip for rebuild):
 ```
 docker buildx create --name multiplatform --use
 docker buildx ls
