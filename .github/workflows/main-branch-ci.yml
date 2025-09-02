@@ -15,6 +15,9 @@ permissions:
   packages: read
   contents: read
 
+env:
+  DEV_CONTAINER_IMG: ghcr.io/michaeldello/stm32-dev:v1.4
+
 jobs:
 
   #-----------------------------------------------------------------------------
@@ -25,7 +28,7 @@ jobs:
       contents: read
       packages: read
     container:
-      image: ghcr.io/michaeldello/stm32-dev:v1.3
+      image: ${{ env.DEV_CONTAINER_IMG }}
       # Run the container as root
       options: --user 0
     
@@ -69,6 +72,52 @@ jobs:
           path: build/tests-${{ matrix.project }}.xml
 
   #-----------------------------------------------------------------------------
+  check-source-code-quality:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    container:
+      image: ${{ env.DEV_CONTAINER_IMG }}
+      # Run the container as root
+      options: --user 0
+    env:
+      BUILD_DIR: build-quality
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Debug Build for Quality Checks
+        run: |
+          rm -rf "$BUILD_DIR"
+          cmake -S . -B "$BUILD_DIR" \
+            -DUNIT_TESTS=ON \
+            -DBUILD_FIRMWARE=OFF \
+            -DCMAKE_BUILD_TYPE=DEBUG \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+      - name: Check clang-format
+        run: |
+          FILES=$(git ls-files \
+            'common/**/*.c' 'common/**/*.h' 'projects/**/*.c' 'projects/**/*.h')
+          clang-format --dry-run $FILES || echo "Formatting suggestions only (non-blocking)."
+      - name: Check clang-tidy
+        run: |
+          (cd "$BUILD_DIR" && run-clang-tidy -quiet -p .)
+      - name: Run cppcheck
+        run: |
+          mkdir -p quality-reports
+          cppcheck --std=c11 --language=c \
+                   --enable=warning,style,performance,portability \
+                   --inline-suppr --error-exitcode=1 \
+                   -I common/include common projects \
+                   2> quality-reports/cppcheck.txt || \
+                      { echo "cppcheck issues"; exit 1; }
+      - name: Upload Quality Check Reports
+        if: always()
+        uses: actions/upload-artifacts@v4
+        with:
+          name: code-quality-reports
+          path: quality-reports
+  
+  #-----------------------------------------------------------------------------
   build-firmware:
     runs-on: ubuntu-latest
     permissions:
@@ -79,7 +128,7 @@ jobs:
       matrix:
         project: [ blinky ]
     container:
-      image: ghcr.io/michaeldello/stm32-dev:v1.3
+      image: ${{ env.DEV_CONTAINER_IMG }}
       # Run the container as root
       options: --user 0
     env:

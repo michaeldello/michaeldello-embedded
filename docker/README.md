@@ -79,7 +79,9 @@ docker buildx build \
 
 Use GitHub actions Publish CI workflow.
 
-See .github/workflows/publish-amd64.yml
+Run this with a version parameter, e.g., `1.4`.
+
+See .github/workflows/publish-amd64.yml for more details.
 
 ## Merge ARM64 and AMD64
 

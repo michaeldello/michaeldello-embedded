@@ -1,0 +1,10 @@
+---
+Language: Cpp
+# General
+BasedOnStyle: Mozilla
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 100
+SortIncludes: false
+PointerAlignment: Left

@@ -22,7 +22,8 @@
 //------------------------------------------------------------------------------
 // Test Definitions
 //------------------------------------------------------------------------------
-static void test_echo_basic(void**) {
+static void test_echo_basic(void **state) {
+    (void)state;  // silence unused warning
     size_t usize = uart_context_size();
     uint8_t ustore[usize];
     uart_t *pUART = (uart_t*)ustore;
@@ -65,7 +66,8 @@ static void test_echo_basic(void**) {
 }
 
 //------------------------------------------------------------------------------
-static void test_tx_limiting(void**) {
+static void test_tx_limiting(void **state) {
+    (void)state;  // silence unused warning
     size_t usize = uart_context_size();
     uint8_t ustore[usize];
     uart_t *pUART = (uart_t*)ustore;
@@ -107,7 +109,8 @@ static void test_tx_limiting(void**) {
 }
 
 //------------------------------------------------------------------------------
-static void test_overflow_count(void**) {
+static void test_overflow_count(void **state) {
+    (void)state;  // silence unused warning
     size_t usize = uart_context_size();
     uint8_t ustore[usize];
     uart_t *pUART = (uart_t*)ustore;
@@ -139,7 +142,8 @@ static void test_overflow_count(void**) {
 }
 
 //------------------------------------------------------------------------------
-static void test_echo_chunk_config(void**) {
+static void test_echo_chunk_config(void **state) {
+    (void)state;  // silence unused warning
     size_t usize = uart_context_size();
     uint8_t ustore[usize];
     uart_t *pUART = (uart_t*)ustore;

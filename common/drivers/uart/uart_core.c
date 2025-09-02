@@ -139,7 +139,7 @@ uint32_t uart_rx_overflow_count(const uart_t *pu) {
 }
 
 //------------------------------------------------------------------------------
-uint32_t uart_rx_overflow_clear(uart_t *pu) {
+void uart_rx_overflow_clear(uart_t *pu) {
     pu->rx_overflow_count = 0;
 }
 
