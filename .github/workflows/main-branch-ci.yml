@@ -105,11 +105,10 @@ jobs:
                    --enable=warning,style,performance,portability \
                    --inline-suppr --error-exitcode=1 \
                    -I common/include common projects \
-                   2> quality-reports/cppcheck.txt || \
-                      { echo "cppcheck issues"; exit 1; }
+                   2> quality-reports/cppcheck.txt || { echo "cppcheck issues"; exit 1; }
       - name: Upload Quality Check Reports
         if: always()
-        uses: actions/upload-artifacts@v4
+        uses: actions/upload-artifact@v4
         with:
           name: code-quality-reports
           path: quality-reports
