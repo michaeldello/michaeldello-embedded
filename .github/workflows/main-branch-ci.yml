@@ -28,7 +28,7 @@ jobs:
       contents: read
       packages: read
     container:
-      image: ${{ env.DEV_CONTAINER_IMG }}
+      image: $DEV_CONTAINER_IMG
       # Run the container as root
       options: --user 0
     
@@ -78,7 +78,7 @@ jobs:
       contents: read
       packages: read
     container:
-      image: ${{ env.DEV_CONTAINER_IMG }}
+      image: $DEV_CONTAINER_IMG
       # Run the container as root
       options: --user 0
     env:
@@ -128,7 +128,7 @@ jobs:
       matrix:
         project: [ blinky ]
     container:
-      image: ${{ env.DEV_CONTAINER_IMG }}
+      image: $DEV_CONTAINER_IMG
       # Run the container as root
       options: --user 0
     env:
