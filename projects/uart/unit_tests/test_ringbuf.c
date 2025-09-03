@@ -21,7 +21,8 @@
 //------------------------------------------------------------------------------
 // Test Definitions
 //------------------------------------------------------------------------------
-static void test_push_pop(void**) {
+static void test_push_pop(void **state) {
+    (void)state;  // silence unused warning
     uint8_t storage[4];
     ringbuf_t r;
     ringbuf_init(&r, storage, sizeof(storage));
@@ -36,7 +37,8 @@ static void test_push_pop(void**) {
 }
 
 //------------------------------------------------------------------------------
-static void test_overflow(void**) {
+static void test_overflow(void **state) {
+    (void)state;  // silence unused warning
     uint8_t storage[2];
     ringbuf_t r;
     ringbuf_init(&r, storage, sizeof(storage));

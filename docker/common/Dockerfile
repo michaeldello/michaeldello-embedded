@@ -18,6 +18,17 @@ RUN apt-get update && apt-get install -y \
     sudo \
     && apt-get clean
 
+# ---- Code quality & static analysis ----
+# clang-format / clang-tidy (meta packages), run-clang-tidy, cppcheck, and helpers
+RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends \
+      clang-format \
+      clang-tidy \
+      clang-tools \
+      cppcheck \
+      python3-pip && \
+    pip3 install --no-cache-dir cmakelang && \
+    sudo rm -rf /var/lib/apt/lists/*
+
 # Create and switch to a non-root user (but allow sudo if needed) for cleaner,
 # safer development
 RUN useradd -ms /bin/bash dev && \

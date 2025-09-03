@@ -76,7 +76,7 @@ void uart_echo_pump(uart_t *pu);
 //------------------------------------------------------------------------------
 // Overflow Diag
 uint32_t uart_rx_overflow_count(const uart_t *pu);
-uint32_t uart_rx_overflow_clear(uart_t *pu);
+void uart_rx_overflow_clear(uart_t *pu);
 
 //------------------------------------------------------------------------------
 // Override Drain Chunk Size
