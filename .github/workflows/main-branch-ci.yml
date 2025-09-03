@@ -69,7 +69,7 @@ jobs:
           path: build/tests-${{ matrix.project }}.xml
 
   #-----------------------------------------------------------------------------
-  check-source-code-quality:
+  check-code-quality:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -82,6 +82,8 @@ jobs:
       BUILD_DIR: build-quality
     steps:
       - uses: actions/checkout@v4
+      - name: Mark repo Safe
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
       - name: Configure Debug Build for Quality Checks
         run: |
           rm -rf "$BUILD_DIR"
