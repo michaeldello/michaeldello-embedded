@@ -20,7 +20,7 @@
 // Doxygen Brief
 //------------------------------------------------------------------------------
 
-/** @file uart_api.h
+/** @file gpio_api.h
  *  @brief Portable GPIO API for clients to use.
  */
 
