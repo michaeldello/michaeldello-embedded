@@ -1,0 +1,31 @@
+# -------- Project --------
+PROJECT_NAME           = "michaeldello-embedded"
+OUTPUT_DIRECTORY       = docs/out
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+OPTIMIZE_OUTPUT_FOR_C  = YES
+
+# -------- Input --------
+INPUT                  = common/include common/drivers projects
+FILE_PATTERNS          = *.h *.c
+RECURSIVE              = YES
+EXCLUDE_PATTERNS       = */build* */build-* */out/* */unit_tests/*
+
+# Only document things with comments; flip to YES if you want undocumented symbols listed
+EXTRACT_ALL            = NO
+
+# Treat headers as C, not C++
+EXTENSION_MAPPING      = h=C
+
+# -------- Diagrams (optional, needs Graphviz) --------
+HAVE_DOT               = YES
+DOT_NUM_THREADS        = 4
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+DOT_IMAGE_FORMAT       = svg
+INTERACTIVE_SVG        = YES
+
+# -------- Warnings (useful but not noisy) --------
+WARN_IF_UNDOCUMENTED   = NO
+WARN_IF_DOC_ERROR      = YES
+QUIET                  = YES
