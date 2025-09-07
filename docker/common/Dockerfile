@@ -29,6 +29,11 @@ RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends \
     pip3 install --no-cache-dir cmakelang && \
     sudo rm -rf /var/lib/apt/lists/*
 
+# ---- Documentation tools ----
+RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends \
+      doxygen graphviz && \
+    sudo rm -rf /var/lib/apt/lists/*
+
 # Create and switch to a non-root user (but allow sudo if needed) for cleaner,
 # safer development
 RUN useradd -ms /bin/bash dev && \
