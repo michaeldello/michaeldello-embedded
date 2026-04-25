@@ -12,6 +12,7 @@ option(UNIT_TESTS     "Build unit tests"                ON)
 # Firmware targets
 if(BUILD_FIRMWARE)
   add_subdirectory(projects/blinky)
+  add_subdirectory(projects/uart)
 endif()
 
 # Unit tests (all)

@@ -16,14 +16,14 @@ SET(LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/common/linker/stm32h5/stm32h563xx.ld")
 # Define executable
 add_executable(blinky.elf
     ${CMAKE_SOURCE_DIR}/projects/blinky/main.c
-    ${CMAKE_SOURCE_DIR}/projects/blinky/app/blinky.c
+    ${CMAKE_SOURCE_DIR}/projects/blinky/src/blinky.c
     ${CMAKE_SOURCE_DIR}/common/platform/baremetal/stm32h5/gpio.c
     ${CMAKE_SOURCE_DIR}/common/platform/baremetal/stm32h5/startup_stm32h5.s
 )
 
 # Set include paths
 target_include_directories(blinky.elf PRIVATE
-    ${CMAKE_SOURCE_DIR}/projects/blinky/app
+    ${CMAKE_SOURCE_DIR}/projects/blinky/src
     ${CMAKE_SOURCE_DIR}/common/include
 )
 
