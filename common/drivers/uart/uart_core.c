@@ -40,8 +40,10 @@ bool uart_init(
         void                   *ptx_buf, 
         size_t                 tx_size) {
     // Initial sanity checks
-    if (!pu || !phw || !phw->hw_init ||
-            !prx_buf ||  !ptx_buf || !rx_size || ! tx_size) {
+    if (!pu || !phw || !phw->hw_init || !phw->hw_tx_ready ||
+            !phw->hw_tx_write || !phw->hw_rx_available ||
+            !phw->hw_rx_read || !prx_buf || !ptx_buf ||
+            !rx_size || !tx_size) {
         return false;
     }
     // Install hardware API

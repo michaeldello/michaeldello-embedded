@@ -34,7 +34,7 @@ target_include_directories(test_uart_core PRIVATE
     ${REPO_ROOT}/common/include
     ${REPO_ROOT}/common/drivers/uart
     ${REPO_ROOT}/common/unit_tests/stubs
-    ${REPO_ROOT}/projects/uart/app
+    ${REPO_ROOT}/projects/uart/src
 )
 target_include_directories(test_uart_core PRIVATE
     ${CMOCKA_INCLUDE_DIRS}

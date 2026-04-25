@@ -49,10 +49,41 @@ static void test_overflow(void **state) {
 }
 
 //------------------------------------------------------------------------------
+static void test_wraparound(void **state) {
+    (void)state;  // silence unused warning
+    uint8_t storage[3];
+    ringbuf_t r;
+    uint8_t byte = 0;
+
+    ringbuf_init(&r, storage, sizeof(storage));
+    assert_true(ringbuf_push(&r, 'A'));
+    assert_true(ringbuf_push(&r, 'B'));
+    assert_true(ringbuf_push(&r, 'C'));
+
+    assert_true(ringbuf_pop(&r, &byte));
+    assert_int_equal('A', byte);
+    assert_true(ringbuf_pop(&r, &byte));
+    assert_int_equal('B', byte);
+
+    assert_true(ringbuf_push(&r, 'D'));
+    assert_true(ringbuf_push(&r, 'E'));
+    assert_int_equal(3, ringbuf_available(&r));
+
+    assert_true(ringbuf_pop(&r, &byte));
+    assert_int_equal('C', byte);
+    assert_true(ringbuf_pop(&r, &byte));
+    assert_int_equal('D', byte);
+    assert_true(ringbuf_pop(&r, &byte));
+    assert_int_equal('E', byte);
+    assert_false(ringbuf_pop(&r, &byte));
+}
+
+//------------------------------------------------------------------------------
 int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_push_pop),
         cmocka_unit_test(test_overflow),
+        cmocka_unit_test(test_wraparound),
     };
     return cmocka_run_group_tests(tests, NULL, NULL);
 }

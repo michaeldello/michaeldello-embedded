@@ -57,7 +57,7 @@ michaeldello-embedded/
 ├── docs/
 ├── projects/
 │   ├── blinky/
-│   │   ├── app/
+│   │   ├── src/
 │   │   ├── CMakeLists.txt
 │   │   ├── main.c
 │   │   └── unit_tests/
@@ -134,7 +134,7 @@ Address these items to add a new application (or extend and existing one):
 
 1. Create a new, named application folder under projects/
 1. Add a README.md for preserving important notes
-1. Add an application header file in an app/ folder under the named application folder
+1. Add an application header file in an src/ folder under the named application folder
 1. Iterate on the implementation module and unit tests
     1. TDD can be used here to ensure a decoupled approach that can be iterated
 1. Create a main program for the new application's execution under the named application's folder that exercises the application's implementation
@@ -168,22 +168,48 @@ cmake --build build-fw --parallel
 
 ## Loading the Application
 
-Using ST-Link:
+The firmware build writes project-specific ELF files under `build-fw/projects/`.
+Run the OpenOCD or GDB commands below from the repository root on the host
+machine connected to the STM32H5 board.
+
+Flash blinky using ST-LINK:
 ```
 openocd -f interface/stlink.cfg -f target/stm32h5x.cfg \
-  -c "program build-fw/blinky.elf verify reset exit"
+  -c "program build-fw/projects/blinky/blinky.elf verify reset exit"
 ```
 
-Using J-Link:
+Flash UART echo using ST-LINK:
+```
+openocd -f interface/stlink.cfg -f target/stm32h5x.cfg \
+  -c "program build-fw/projects/uart/uart_echo.elf verify reset exit"
+```
+
+Flash blinky using J-Link:
 ```
 openocd -f interface/jlink.cfg -f target/stm32h5x.cfg \
-  -c "program build-fw/blinky.elf verify reset exit"
+  -c "program build-fw/projects/blinky/blinky.elf verify reset exit"
 ```
 
-Using SEGGER GDB:
+Flash UART echo using J-Link:
+```
+openocd -f interface/jlink.cfg -f target/stm32h5x.cfg \
+  -c "program build-fw/projects/uart/uart_echo.elf verify reset exit"
+```
+
+Debug blinky using SEGGER GDB:
 ```
 JLinkGDBServer -device STM32H563ZI -if SWD -speed 4000
-arm-none-eabi-gdb build-fw/blinky.elf
+arm-none-eabi-gdb build-fw/projects/blinky/blinky.elf
+(gdb) target remote :2331
+(gdb) monitor reset halt
+(gdb) load
+(gdb) continue
+```
+
+Debug UART echo using SEGGER GDB:
+```
+JLinkGDBServer -device STM32H563ZI -if SWD -speed 4000
+arm-none-eabi-gdb build-fw/projects/uart/uart_echo.elf
 (gdb) target remote :2331
 (gdb) monitor reset halt
 (gdb) load

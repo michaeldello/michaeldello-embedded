@@ -10,12 +10,12 @@ endif()
 
 add_executable(test_blinky
     test_blinky.c
-    ${REPO_ROOT}/projects/blinky/app/blinky.c
+    ${REPO_ROOT}/projects/blinky/src/blinky.c
     ${REPO_ROOT}/common/unit_tests/stubs/gpio_stub.c
 )
 
 target_include_directories(test_blinky PRIVATE
-    ${REPO_ROOT}/projects/blinky/app
+    ${REPO_ROOT}/projects/blinky/src
     ${REPO_ROOT}/common/include
     ${CMOCKA_INCLUDE_DIRS}
 )

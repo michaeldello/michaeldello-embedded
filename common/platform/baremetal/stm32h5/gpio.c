@@ -10,18 +10,7 @@
 //------------------------------------------------------------------------------
 
 #include "gpio_api.h"
-
-//------------------------------------------------------------------------------
-// Constants
-//------------------------------------------------------------------------------
-
-// RCC and GPIO Register Values
-#define RCC_AHB4ENR (*(volatile uint32_t*)0x580244E0)
-#define GPIOB_MODER (*(volatile uint32_t*)0x58020400)
-#define GPIOB_ODR   (*(volatile uint32_t*)0x58020414)
-
-// GPIOB Location
-#define GPIOB ((uint32_t*)0x58020400)
+#include "platform_config.h"
 
 //------------------------------------------------------------------------------
 // API Instantiation

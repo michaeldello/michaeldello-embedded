@@ -18,14 +18,14 @@ permissions:
 jobs:
 
   #-----------------------------------------------------------------------------
-  run-unit-tests:
+  build-and-unit-test:
     # Runner and Container Execution Context
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: read
     container:
-      image: ghcr.io/michaeldello/stm32-dev:v1.5
+      image: ghcr.io/michaeldello/stm32-dev:v1.6
       # Run the container as root
       options: --user 0
     
@@ -75,7 +75,7 @@ jobs:
       contents: read
       packages: read
     container:
-      image: ghcr.io/michaeldello/stm32-dev:v1.5
+      image: ghcr.io/michaeldello/stm32-dev:v1.6
       # Run the container as root
       options: --user 0
     env:
@@ -122,7 +122,7 @@ jobs:
       contents: read
       packages: read
     container:
-      image: ghcr.io/michaeldello/stm32-dev:v1.5
+      image: ghcr.io/michaeldello/stm32-dev:v1.6
       options: --user 0
     steps:
       - uses: actions/checkout@v4
@@ -139,7 +139,7 @@ jobs:
           path: docs/out/html
 
   #-----------------------------------------------------------------------------
-  build-firmware:
+  build-for-hardware:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -147,9 +147,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [ blinky ]
+        project: [ blinky, uart ]
     container:
-      image: ghcr.io/michaeldello/stm32-dev:v1.5
+      image: ghcr.io/michaeldello/stm32-dev:v1.6
       # Run the container as root
       options: --user 0
     env:
@@ -179,11 +179,12 @@ jobs:
       - name: Collect (${{ matrix.project }}) Artifacts
         run: |
           mkdir -p artifacts/${{ matrix.project }}
-          cp -v "$BUILD_DIR"/*.hex artifacts/${{ matrix.project }} 2>/dev/null || true
-          cp -v "$BUILD_DIR"/*.bin artifacts/${{ matrix.project }} 2>/dev/null || true
-          cp -v "$BUILD_DIR"/projects/${{ matrix.project }}/*.elf artifacts/${{ matrix.project }} 2>/dev/null || true
-          cp -v "$BUILD_DIR"/projects/${{ matrix.project }}/*.map artifacts/${{ matrix.project }} 2>/dev/null || true
-
+          find build-fw -maxdepth 3 -name "${{ matrix.project }}*.{elf,hex,bin,map}" -type f -exec cp {} artifacts/${{ matrix.project }}/ \; || true
+          # UART uses uart_echo base name:
+          if [ "${{ matrix.project }}" = "uart" ]; then
+            find build-fw -maxdepth 3 -name "uart_echo.{elf,hex,bin,map}" -type f -exec cp {} artifacts/${{ matrix.project }}/ \;
+          fi
+    
       - name: Upload Firmware Build Artifacts
         if: always()
         uses: actions/upload-artifact@v4
